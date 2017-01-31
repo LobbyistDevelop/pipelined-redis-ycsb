@@ -154,10 +154,12 @@ public final class RedisClient extends DB {
 
 
   private void syncPipeline(){
+    long st = System.currentTimeMillis();
     p.sync();
+    long en = System.currentTimeMillis();
     //response check and accumulate status result
     //read
-    System.out.println("syncPipeline");
+    System.out.println("syncPipeline : sync time : "+(en-st));
     for (Response<Map<String, String>> res : resHgetAll){
       statusesRead.add(res.get().isEmpty() ? Status.ERROR : Status.OK);
     }
@@ -192,11 +194,13 @@ public final class RedisClient extends DB {
     //System.out.println("[bigs] jedis - read");
     if (isPipelined){
       if (fields == null){
-        resHgetAll.add(p.hgetAll(key));
+//        resHgetAll.add(p.hgetAll(key));
+        p.hgetAll(key);
       }else{
         String[] fieldArray =
             (String[]) fields.toArray(new String[fields.size()]);
-        resHmget.add(p.hmget(key, fieldArray));
+       // resHmget.add(p.hmget(key, fieldArray));
+        p.hmget(key, fieldArray);
       }
       pipelineProcess();
       return Status.OK;
@@ -246,7 +250,8 @@ public final class RedisClient extends DB {
       HashMap<String, ByteIterator> values) {
     //System.out.println("[bigs] jedis - update");
     if (isPipelined){
-      resHmset.add(p.hmset(key, StringByteIterator.getStringMap(values)));
+      //resHmset.add(p.hmset(key, StringByteIterator.getStringMap(values)));
+      p.hmset(key, StringByteIterator.getStringMap(values));
       pipelineProcess();
       return Status.OK;
     }
