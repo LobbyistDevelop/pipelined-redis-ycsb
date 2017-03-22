@@ -1,3 +1,10 @@
+
+modified ycsb for strict durable redis (add pipelining)
+
+===================================
+
+
+
 <!--
 Copyright (c) 2010 Yahoo! Inc., 2012 - 2016 YCSB contributors.
 All rights reserved.
